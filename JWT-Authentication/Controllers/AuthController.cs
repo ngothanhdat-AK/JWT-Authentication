@@ -29,15 +29,26 @@ namespace JWT_Authentication.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login([FromBody]UserDto request)
+        public async Task<ActionResult<TokenResponseDto>> Login([FromBody]UserDto request)
         {
-            var token = await authService.LoginAsync(request);
-            if (token is null)
+            var result = await authService.LoginAsync(request);
+            if (result is null)
             {
                 return BadRequest("Invalid username or password");
             }
 
-            return Ok(token);
+            return Ok(result);
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult<TokenResponseDto>> RefreshToken([FromBody] RefreshTokenRequestDto request)
+        {
+            var result = await authService.RefreshTokenAsync(request);
+            if (result is null || result.AccessToken is null || result.RefreshToken is null)
+            {
+                return Unauthorized("Invalid refresh token");
+            }
+            return Ok(result);
         }
 
         [Authorize]
@@ -45,6 +56,13 @@ namespace JWT_Authentication.Controllers
         public IActionResult AuthenticatedOnlyEndPoint()
         {
             return Ok("You are authenticated endpoint! ");
+        }
+
+        [Authorize(Roles ="Admin")] //User, Manager
+        [HttpGet("admin-only")]
+        public IActionResult AdminOnlyEndPoint()
+        {
+            return Ok("You are admin endpoint! ");
         }
     }
 }
