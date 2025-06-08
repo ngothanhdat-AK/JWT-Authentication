@@ -53,7 +53,7 @@ namespace JWT_Authentication.Controllers
             var key = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(configuration.GetValue<string>("Token:Key")!)); ;
 
-            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
 
             var tokenDescription = new JwtSecurityToken(
                 issuer: configuration.GetValue<string>("Token:Issuer"),
