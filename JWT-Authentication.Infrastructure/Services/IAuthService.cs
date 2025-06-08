@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JWT_Authentication.Abstraction.Entities;
+using JWT_Authentication.Abstraction.Models;
 
 namespace JWT_Authentication.Infrastructure.Services
 {
-    internal class IAuthService
+    public interface IAuthService
     {
+        Task<User?> RegisterAsync(UserDto request);
+        Task<string?> LoginAsync(UserDto request);
     }
 }
